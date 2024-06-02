@@ -54,6 +54,6 @@ jobs:
             sed -i "s/$tag:/${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}/" $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml
       - name: Helm package & Push to Nexus
         run: |
-          helm package $GITHUB_WORKSPACE/shanvistore/helm/ $GITHUB_WORKSPACE/shanvistore/helm/shanvistore --version 1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
+          helm package -d $GITHUB_WORKSPACE/shanvistore/helm/ $GITHUB_WORKSPACE/shanvistore/helm/shanvistore --version 1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
           curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} https://nexus.devopsodia.com/repository/devopsodia-helm/ --upload-file $GITHUB_WORKSPACE/shanvistore/helm/shanvistore-1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}.tgz -v
 
