@@ -51,7 +51,7 @@ jobs:
         run: |
           git_hash=$(git rev-parse --short "$GITHUB_SHA")
           version=$(cat $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml | grep tag: | awk '{print $2}')
-          sed -i "s/$tag/${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}/" $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml
+            sed -i "s/$tag:/${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}/" $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml
       - name: Commit and push changes
         uses: devops-infra/action-commit-push@v0.3
         with:
