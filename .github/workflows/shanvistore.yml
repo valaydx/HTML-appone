@@ -42,7 +42,7 @@ jobs:
       - name: Helm package
         run: |
           helm package -d $GITHUB_WORKSPACE/shanvistore/helm/ $GITHUB_WORKSPACE/shanvistore/helm/shanvistore
-          curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} https://nexus.devopsodia.com/repository/devopsodia-helm/ --upload-file $GITHUB_WORKSPACE/shanvistore/helm/shanvistore-1.0.0.tgz -v
+          curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} https://nexus.devopsodia.com/repository/devopsodia-helm/ --upload-file $GITHUB_WORKSPACE/shanvistore/helm/shanvistore-0.1.0.tgz -v
           #      - name: Deploy Helm chart on Kubernetes cluster
           #        run: |
           #helm uninstall sri-appone -n sriapp
