@@ -49,9 +49,7 @@ jobs:
           docker push ${{ vars.NEXUS_REPO }}/shanvistore:${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
       - name: Update Version 
         run: |
-          git_hash=$(git rev-parse --short "$GITHUB_SHA")
-          version=$(cat $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml | grep tag: | awk '{print $2}')
-            sed -i "s/$tag:/${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}/" $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml
+          sed -i "s/tag: .*/tag: ${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}/" $GITHUB_WORKSPACE/shanvistore/helm/shanvistore/values.yaml
       - name: Helm package & Push to Nexus
         run: |
           helm package -d $GITHUB_WORKSPACE/shanvistore/helm/ $GITHUB_WORKSPACE/shanvistore/helm/shanvistore --version 1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
