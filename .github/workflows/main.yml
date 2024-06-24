@@ -29,8 +29,7 @@ jobs:
       # Runs a single command using the runners shell
       - name: Docker login
         run: |
-          docker login -u ${{ secrets.NEXUS_USERNAME }} -p ${{ secrets.NEXUS_PASSWORD }} ${{ vars.NEXUS_REPO }} --password-stdin
-      - name: Extract Git hash and date
+          docker login -u ${{ secrets.NEXUS_USERNAME }} -p ${{ secrets.NEXUS_PASSWORD }} ${{ vars.NEXUS_REPO }}
         id: vars
         run: |
           GIT_HASH=$(git rev-parse --short=8 HEAD) 
