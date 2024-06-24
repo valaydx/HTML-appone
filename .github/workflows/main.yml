@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CICD
+name: CI_ShanviStore
 
 # Controls when the workflow will run
 on:
@@ -30,20 +30,27 @@ jobs:
       - name: Docker login
         run: |
           docker login -u ${{ secrets.NEXUS_USERNAME }} -p ${{ secrets.NEXUS_PASSWORD }} ${{ vars.NEXUS_REPO }}
+      - name: Extract Git hash and date
+        id: vars
+        run: |
+          GIT_HASH=$(git rev-parse --short=8 HEAD) 
+          TAG_VERSION=0.0.99
+          echo "GIT_HASH=${GIT_HASH}" >> $GITHUB_ENV
+          echo "TAG_VERSION=${TAG_VERSION}" >> $GITHUB_ENV
 
       # Runs a set of commands using the runners shell
       - name: Run Building Docker image
         run: |
           cd $GITHUB_WORKSPACE/build
-          docker build -t ${{ vars.NEXUS_REPO }}/sri-appone .
+          docker build -t shanvistore .
+          docker tag shanvistore:latest ${{ vars.NEXUS_REPO }}/shanvistore:${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
       - name: Run Pushing Docker image
         run: |
-          docker push ${{ vars.NEXUS_REPO }}/sri-appone:latest
-      - name: Helm package
+          docker push ${{ vars.NEXUS_REPO }}/shanvistore:${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
+      - name: Update Version 
         run: |
-          helm package -d $GITHUB_WORKSPACE/helm/ $GITHUB_WORKSPACE/helm/sri-appone
-          curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} https://nexus.devopsodia.com/repository/devopsodia-helm/ --upload-file $GITHUB_WORKSPACE/helm/sri-appone-1.0.0.tgz -v
-      - name: Deploy Helm chart on Kubernetes cluster
+          sed -i "s/tag: .*/tag: ${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}/" $GITHUB_WORKSPACE/helm/shanvistore/values.yaml
+      - name: Helm package & Push to Nexus Repo
         run: |
-          #helm uninstall sri-appone -n sriapp
-          helm install sri-appone $GITHUB_WORKSPACE/helm/sri-appone-1.0.0.tgz -n sriapp
+          helm package -d $GITHUB_WORKSPACE/helm/ $GITHUB_WORKSPACE/helm/shanvistore --version 1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
+          curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} http://192.168.56.111:8081/repository/valay-helm/ --upload-file $GITHUB_WORKSPACE/helm/shanvistore-1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}.tgz -v
