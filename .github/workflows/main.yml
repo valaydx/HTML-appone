@@ -52,4 +52,4 @@ jobs:
       - name: Helm package & Push to Nexus Repo
         run: |
           helm package -d $GITHUB_WORKSPACE/helm/ $GITHUB_WORKSPACE/helm/shanvistore --version 1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}
-          curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} http://192.168.56.111:8081/repository/valay-helm/ --upload-file $GITHUB_WORKSPACE/helm/shanvistore-1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}.tgz -v
+          curl -u ${{ secrets.NEXUS_USERNAME }}:${{ secrets.NEXUS_PASSWORD }} http://192.168.56.111:8081/repository/helm-private/ --upload-file $GITHUB_WORKSPACE/helm/shanvistore-1.0.0-${{ env.TAG_VERSION }}-${{ env.GIT_HASH }}.tgz -v
