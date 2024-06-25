@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: nexus.devopsodia.com:9999/shanvistore
+  repository: 192.168.56.111:9090/shanvistore
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
